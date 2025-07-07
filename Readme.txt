@@ -1,54 +1,76 @@
-Thanks for downloading this template!
+# 💻 Comfort Limata's Portfolio Website
 
-Template Name: SnapFolio
-Template URL: https://bootstrapmade.com/snapfolio-bootstrap-portfolio-template/
-Author: BootstrapMade.com
-License: https://bootstrapmade.com/license/
+Welcome to my official personal portfolio — a showcase of my work, skills, and ongoing journey in web development, cybersecurity, and systems design.
+
+🚀 Built with love, passion, and continuous learning by **Comfort Limata**  
+🎓 3rd Year BSc Information Systems & Technology | University of Lusaka  
+🌐 Live Site: [https://yourusername.github.io/your-portfolio-repo](#) *(update link once deployed)*  
+📫 Contact: [YourEmail@example.com](mailto:youremail@example.com)
 
 ---
 
-## Secure Feedback Submission with Netlify Functions
+## 📁 About This Project
 
-1. Create a directory: `netlify/functions/`
-2. Add a file: `submit-feedback.js` with the following content:
+This portfolio is based on the **SnapFolio** Bootstrap template, but fully customized and extended by me to:
 
-```
-const fetch = require('node-fetch');
+## 🛠️ Technologies Used
 
-exports.handler = async function(event, context) {
-  if (event.httpMethod !== 'POST') {
-    return { statusCode: 405, body: 'Method Not Allowed' };
-  }
+- **HTML5, CSS3, JavaScript**
+- **PHP & MySQL (project samples)**
+- **Bootstrap 5**
+- **Git & GitHub**
+- **Kali Linux (for ethical hacking practice)**
+- **Netlify Functions (for secure feedback submission)**
 
-  const { name, rating, feedback } = JSON.parse(event.body);
+---
 
-  // Store your token in an environment variable for security!
-  const GITHUB_TOKEN = process.env.GITHUB_TOKEN;
-  const REPO = 'YOUR_GITHUB_USERNAME/YOUR_REPO_NAME';
+## ✅ Features
 
-  const issueTitle = `Feedback from ${name} (Rating: ${rating} stars)`;
-  const issueBody = feedback;
+- Responsive design for mobile and desktop
+- Sections for Skills, Projects, About Me, and Contact
+- Feedback form connected to GitHub Issues via Netlify Functions
+- Easy navigation and clean user experience
+- GitHub Pages–ready deployment
 
-  const response = await fetch(`https://api.github.com/repos/${REPO}/issues`, {
-    method: 'POST',
-    headers: {
-      'Authorization': `token ${GITHUB_TOKEN}`,
-      'Accept': 'application/vnd.github.v3+json',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      title: issueTitle,
-      body: issueBody
-    })
-  });
+---
 
-  if (response.ok) {
-    return { statusCode: 200, body: 'Feedback submitted!' };
-  } else {
-    return { statusCode: 500, body: 'Error submitting feedback.' };
-  }
-};
-```
+## ✉️ Secure Feedback System (Using GitHub + Netlify)
 
-3. In your Netlify dashboard, set the environment variable `GITHUB_TOKEN` to your GitHub personal access token.
-4. Update your feedback form JavaScript to POST to `/.netlify/functions/submit-feedback` as shown in the main instructions.
+Visitors can submit feedback through a form that safely creates an issue in my GitHub repository using Netlify Functions.
+
+### Setup:
+
+1. Create a `netlify/functions/submit-feedback.js` file with the function logic (see code in this repo).
+2. Add a GitHub **personal access token** as an environment variable named `GITHUB_TOKEN` in your Netlify settings.
+3. Make sure the feedback form sends POST requests to:  
+   `/.netlify/functions/submit-feedback`
+
+> ✅ All feedback gets converted into GitHub Issues — a great way to collect reviews, suggestions, or testimonials.
+
+---
+
+## 📂 Credits
+
+- **Template Base**: [SnapFolio](https://bootstrapmade.com/snapfolio-bootstrap-portfolio-template/) by BootstrapMade  
+- **Modifications & Deployment**: Fully customized by **Comfort Limata**  
+- **License**: [BootstrapMade License](https://bootstrapmade.com/license/)
+
+---
+
+## 👤 About Me
+
+I'm **Comfort Limata**, a passionate and hands-on Information Systems & Technology student from Zambia. I design and develop real-world digital solutions like POS systems, e-learning platforms, and interactive websites — all showcased here.
+
+🔐 Currently diving deep into cybersecurity using Kali Linux, Nmap, Hydra, and ethical hacking tools as I continue to grow as a full-stack and security-aware developer.
+
+---
+
+## 📌 Connect With Me
+
+ 
+- 📧 Email: comfortlimata@gmail.com
+---
+
+> Feel free to fork, explore, and get inspired.  
+> Feedback is always welcome — click the "Submit Feedback" button on the site to share your thoughts!
+
