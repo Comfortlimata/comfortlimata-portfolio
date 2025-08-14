@@ -16,7 +16,7 @@ const exampleProjects = [
   {
     id: 'p1',
     title: 'Your Gateway to Seamless Online Education',
-    cover: '/images/project/project1.png.png',
+    cover: '/images/project/project1.png.jpg',
     description:
       'A web-based e-learning platform enabling students and instructors to connect seamlessly. Includes authentication, course content delivery, announcements, and admin tooling.',
     tech: ['HTML5', 'CSS3', 'JavaScript', 'PHP 8+', 'MySQL'],
@@ -24,17 +24,17 @@ const exampleProjects = [
       live: 'https://github.com/Comfortlimata/school-elearning-system.git',
       repo: 'https://github.com/Comfortlimata/school-elearning-system.git',
     },
-    screenshots: ['/images/project/project1.png.png'],
+    screenshots: ['/images/project/project1.png.jpg'],
   },
   {
     id: 'p2',
     title: 'Project 2',
-    cover: '/images/project/project2.png.png',
+    cover: '/images/project/project2.png.jpg',
     description:
       'Sample description for Project 2. Replace with a concise summary of goals and outcomes.',
     tech: ['React', 'Next.js', 'Tailwind'],
     links: { live: '#', repo: '#' },
-    screenshots: ['/images/project/project2.png.png'],
+    screenshots: ['/images/project/project2.png.jpg'],
   },
   {
     id: 'p3',
@@ -49,12 +49,12 @@ const exampleProjects = [
   {
     id: 'p4',
     title: 'Bar Sales and Inventory Management System',
-    cover: '/images/project/project4.png.png',
+    cover: '/images/project/project4.png.jpg',
     description:
       'Offline desktop application to manage bar sales, stock, and receipts. Role-based access (admin, staff), fast processing, local SQLite data store, and thermal printer receipts.',
     tech: ['Python', 'Tkinter', 'SQLite3'],
     links: { live: 'https://github.com/Comfortlimata/BarSalesApp.git', repo: 'https://github.com/Comfortlimata/BarSalesApp.git' },
-    screenshots: ['/images/project/project4.png.png'],
+    screenshots: ['/images/project/project4.png.jpg'],
   },
     ];
 

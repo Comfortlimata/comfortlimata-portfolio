@@ -36,23 +36,48 @@ const ReviewSection = () => {
     return () => clearTimeout(timerRef.current);
   }, [current, reviews.length]);
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (star && comment && name) {
-      setReviews([
-        {
-          name,
-          stars: star,
-          comment,
-          date: new Date().toLocaleDateString(),
-        },
-        ...reviews,
-      ]);
-      setStar(0);
-      setHoverStar(0);
-      setComment('');
-      setName('');
-      setCurrent(0);
+      // Submit to Netlify
+      const formData = new FormData();
+      formData.append('form-name', 'reviews');
+      formData.append('name', name);
+      formData.append('email', ''); // Optional field
+      formData.append('rating', star);
+      formData.append('message', comment);
+      formData.append('date', new Date().toLocaleDateString());
+
+      try {
+        await fetch('/', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+          body: new URLSearchParams(formData).toString()
+        });
+        
+        // Also add to local state for immediate display
+        setReviews([
+          {
+            name,
+            stars: star,
+            comment,
+            date: new Date().toLocaleDateString(),
+          },
+          ...reviews,
+        ]);
+        
+        // Reset form
+        setStar(0);
+        setHoverStar(0);
+        setComment('');
+        setName('');
+        setCurrent(0);
+        
+        alert('Thank you for your review! It has been submitted successfully.');
+      } catch (error) {
+        console.error('Error submitting review:', error);
+        alert('There was an error submitting your review. Please try again.');
+      }
     }
   };
 
