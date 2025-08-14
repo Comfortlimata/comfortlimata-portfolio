@@ -1,0 +1,20 @@
+[build]
+  publish = ".next"
+  command = "npm run build"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Form handling
+[forms]
+  # Enable form processing
+  enabled = true
+
+# Prevent spam
+[forms.spam_protection]
+  enabled = true
