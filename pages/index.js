@@ -6,6 +6,7 @@ import Skills from '../src/components/Skills';
 import Portfolio from '../src/components/Portfolio';
 import AnimatedPortfolio from '../src/components/AnimatedPortfolio';
 import Testimonials from '../src/components/Testimonials';
+import ReviewSection from '../src/components/ReviewSection';
 import Contact from '../src/components/Contact';
 import Footer from '../src/components/Footer';
 
@@ -18,6 +19,15 @@ export default function Home() {
         <link rel="icon" href="/icons/favicon.ico" />
       </Head>
 
+      {/* Hidden Netlify form for reviews */}
+      <form name="reviews" netlify netlify-honeypot="bot-field" hidden>
+        <input type="text" name="name" />
+        <input type="email" name="email" />
+        <input type="number" name="rating" />
+        <textarea name="message"></textarea>
+        <input type="text" name="date" />
+      </form>
+
       <Header />
       <main>
         <Hero />
@@ -25,6 +35,7 @@ export default function Home() {
         <Skills />
         <AnimatedPortfolio />
         <Testimonials />
+        <ReviewSection />
         <Contact />
       </main>
       <Footer />

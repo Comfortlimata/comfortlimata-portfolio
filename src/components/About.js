@@ -31,17 +31,11 @@ const About = () => {
             className="mb-8 md:mb-0 md:mr-12 -mt-6 md:-mt-12 flex items-center justify-center relative overflow-hidden rounded-xl shadow-2xl w-64 h-80"
           >
             <img
-              src="/images/profile.png.png"
+              src="/images/profile.png.jpg"
               alt="Comfort Kakumbi Limata"
               className="w-full h-full object-cover rounded-xl"
             />
-            {/* Animated frame overlay */}
-            <img
-              src="/images/frame.png.png"
-              alt="Frame"
-              className="absolute inset-0 w-full h-full object-contain pointer-events-none z-10"
-            />
-            {/* Subtle glow effect */}
+                        {/* Subtle glow effect */}
             <motion.div
               initial={{ opacity: 0 }}
               animate={{ opacity: 0.3, scale: [1, 1.05, 1] }}
