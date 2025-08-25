@@ -12,6 +12,62 @@ const ReviewSection = () => {
   const [current, setCurrent] = useState(0);
   const timerRef = useRef(null);
 
+  // Azure Function API configuration (supports two modes):
+  // 1) NEXT_PUBLIC_REVIEWS_ENDPOINT: full URL including ?code=... query
+  // 2) NEXT_PUBLIC_REVIEWS_API + NEXT_PUBLIC_REVIEWS_API_KEY: send key in x-functions-key header
+  // Hardcoded fallback for student/free setup: used when Netlify site env vars aren't available.
+  // If your Azure Function requires a key, paste it below; leave empty if the function is Anonymous.
+  const HARDCODED_API = '';
+  const HARDCODED_KEY = '';
+
+  const rawApiUrl = process.env.NEXT_PUBLIC_REVIEWS_ENDPOINT || process.env.NEXT_PUBLIC_REVIEWS_API || '';
+  const rawApiKey = process.env.NEXT_PUBLIC_REVIEWS_API_KEY;
+
+  const API_URL = rawApiUrl || HARDCODED_API;
+  const API_KEY = (rawApiKey && rawApiKey !== 'REPLACE_WITH_FUNCTION_KEY') ? rawApiKey : HARDCODED_KEY;
+
+  const buildHeaders = (isJson = false) => {
+    const h = {};
+    if (isJson) h['Content-Type'] = 'application/json';
+    // If using header-based auth (no code in URL), attach the function key
+    if (!process.env.NEXT_PUBLIC_REVIEWS_ENDPOINT && API_KEY) {
+      h['x-functions-key'] = API_KEY;
+    }
+    return h;
+  };
+
+  const mapReview = (r) => ({
+    name: r?.name || r?.fullName || r?.author || 'Anonymous',
+    stars: Number(r?.rating ?? r?.stars ?? r?.score ?? 0),
+    comment: r?.comment ?? r?.message ?? r?.text ?? '',
+    date: r?.created_at || r?.createdAt || r?.date || '',
+  });
+
+  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState({ type: '', message: '' });
+
+  // Load existing reviews from Azure Function API on mount
+  useEffect(() => {
+    let isMounted = true;
+    const load = async () => {
+      if (!API_URL) { setLoading(false); return; }
+      try {
+        const res = await fetch(API_URL, { headers: buildHeaders(false) });
+        if (!res.ok) throw new Error(`Failed to fetch reviews: ${res.status}`);
+        const data = await res.json();
+        const items = Array.isArray(data) ? data : (Array.isArray(data?.items) ? data.items : (data?.results || []));
+        const mapped = items.map(mapReview).filter(r => r.comment);
+        if (isMounted) setReviews(mapped);
+      } catch (err) {
+        console.error('Error loading reviews:', err);
+      } finally {
+        if (isMounted) setLoading(false);
+      }
+    };
+    load();
+    return () => { isMounted = false; };
+  }, []);
+
   const distribution = useMemo(() => {
     const counts = { 1: 0, 2: 0, 3: 0, 4: 0, 5: 0 };
     for (const r of reviews) {
@@ -38,46 +94,55 @@ const ReviewSection = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (star && comment && name) {
-      // Submit to Netlify
-      const formData = new FormData();
-      formData.append('form-name', 'reviews');
-      formData.append('name', name);
-      formData.append('email', ''); // Optional field
-      formData.append('rating', star);
-      formData.append('message', comment);
-      formData.append('date', new Date().toLocaleDateString());
+    if (!star || !comment || !name) return;
 
-      try {
+    try {
+      if (API_URL) {
+        // Send to Azure Function API (persists to Azure SQL)
+        const payload = { name, email: '', rating: star, comment };
+        const res = await fetch(API_URL, {
+          method: 'POST',
+          headers: buildHeaders(true),
+          body: JSON.stringify(payload),
+        });
+        if (!res.ok) {
+          const text = await res.text().catch(() => '');
+          throw new Error(`API error ${res.status}: ${text}`);
+        }
+      } else {
+        // Fallback: Netlify form submission if API URL isn't configured
+        const formData = new FormData();
+        formData.append('form-name', 'reviews');
+        formData.append('name', name);
+        formData.append('email', '');
+        formData.append('rating', star);
+        formData.append('message', comment);
+        formData.append('date', new Date().toLocaleDateString());
+
         await fetch('/', {
           method: 'POST',
           headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
           body: new URLSearchParams(formData).toString()
         });
-        
-        // Also add to local state for immediate display
-        setReviews([
-          {
-            name,
-            stars: star,
-            comment,
-            date: new Date().toLocaleDateString(),
-          },
-          ...reviews,
-        ]);
-        
-        // Reset form
-        setStar(0);
-        setHoverStar(0);
-        setComment('');
-        setName('');
-        setCurrent(0);
-        
-        alert('Thank you for your review! It has been submitted successfully.');
-      } catch (error) {
-        console.error('Error submitting review:', error);
-        alert('There was an error submitting your review. Please try again.');
       }
+
+      // Update local UI immediately
+      setReviews([
+        { name, stars: star, comment, date: new Date().toLocaleDateString() },
+        ...reviews,
+      ]);
+
+      // Reset form
+      setStar(0);
+      setHoverStar(0);
+      setComment('');
+      setName('');
+      setCurrent(0);
+
+      alert('Thank you for your review! It has been submitted successfully.');
+    } catch (error) {
+      console.error('Error submitting review:', error);
+      alert('There was an error submitting your review. Please try again.');
     }
   };
 

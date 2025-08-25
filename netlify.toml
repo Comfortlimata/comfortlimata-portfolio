@@ -4,6 +4,10 @@
 
 [build.environment]
   NODE_VERSION = "18"
+  # Azure Function API endpoint and key for reviews (public at build time)
+  # If you commit the key here, it will be exposed to the client. Acceptable for student/free setup.
+  NEXT_PUBLIC_REVIEWS_API = "https://comfortreviewsapi-htbcc8g9gzbjhubg.southafricanorth-01.azurewebsites.net/api/reviews"
+  NEXT_PUBLIC_REVIEWS_API_KEY = "REPLACE_WITH_FUNCTION_KEY"
 
 [[redirects]]
   from = "/*"
